@@ -7,6 +7,7 @@ from eemail import TempMailGenerator
 import os
 import asyncio
 import string
+import webbrowser
 import json
 import hashlib
 import sys
@@ -17,10 +18,12 @@ DEFAULT_AVATAR_URL = "https://cdn.discordapp.com/icons/1107824834181877792/10376
 DEFAULT_WEBHOOK_NAME = "OneWay Checker"
 DEFAULT_DELAY = 8
 DEFAULT_WEBHOOK_URL = "SUA WEBHOOK AQUI"
+DEFAULT_USERNAME_LENGTH = 4
 
 delay = DEFAULT_DELAY
 webhook_url = DEFAULT_WEBHOOK_URL
 avatar_url = DEFAULT_AVATAR_URL
+username_length = DEFAULT_USERNAME_LENGTH
 webhook_name = DEFAULT_WEBHOOK_NAME
 
 is_logged_in = False
@@ -47,14 +50,20 @@ keyauthapp = api(
     hash_to_check = getchecksum()
 )
 
-def generate_random_username(length=4):
+def generate_random_username(length=None):
+    if length is None:
+        length = username_length
+
     characters = string.ascii_letters + string.digits
     while True:
         username = ''.join(random.choice(characters) for _ in range(length))
         if not username[0].isdigit():
             return username
 
-def check(username, proxy=""):
+def check(username, length=None, proxy=""):
+    if length is None:
+        length = username_length
+
     if proxy != "":
         r = httpx.head(endpoint + username, proxies={proxy.split('|')[0]: proxy.split('|')[1].strip('\n')},
                       headers={'User-Agent': 'Mozilla/5.0 (Kanye) West/5.765 Ye/42.1 (mov-ebx/username-checker on git hub)'})
@@ -64,13 +73,13 @@ def check(username, proxy=""):
 
     if r.status_code == 429:
         time.sleep(5)
-        return check(username=username, proxy=proxy)
+        return check(username=username, length=length, proxy=proxy)
     elif r.status_code == 404:
         return username
     return None
 
 def carregar_configuracoes():
-    global webhook_url, avatar_url, webhook_name, delay  # Declare global variables
+    global webhook_url, avatar_url, webhook_name, delay, username_length 
 
     if os.path.exists(CONFIG_FILE_PATH):
         with open(CONFIG_FILE_PATH, "r") as config_file:
@@ -79,13 +88,15 @@ def carregar_configuracoes():
             avatar_url = config_data.get("avatar_url", DEFAULT_AVATAR_URL)
             webhook_name = config_data.get("webhook_name", DEFAULT_WEBHOOK_NAME)
             delay = int(config_data.get("default_delay", DEFAULT_DELAY))
+            username_length = int(config_data.get("username_length", DEFAULT_USERNAME_LENGTH)) 
 
 def salvar_configuracoes():
     config_data = {
         "webhook_url": webhook_url,
         "default_delay": delay,
         "avatar_url": avatar_url,
-        "webhook_name": webhook_name
+        "webhook_name": webhook_name,
+        "username_length": username_length 
     }
     with open(CONFIG_FILE_PATH, "w") as config_file:
         json.dump(config_data, config_file, indent=4)
@@ -174,6 +185,34 @@ def show_menu():
     print("3. Configurações")
     print("4. Sair" + colorama.Style.RESET_ALL)
 
+def gamertag_checker2_menu():
+    os.system('cls')
+    ascii_art = colorama.Fore.MAGENTA + """
+ ▒█████   ███▄    █ ▓█████  █     █░ ▄▄▄     ▓██   ██▓
+▒██▒  ██▒ ██ ▀█   █ ▓█   ▀ ▓█░ █ ░█░▒████▄    ▒██  ██▒
+▒██░  ██▒▓██  ▀█ ██▒▒███   ▒█░ █ ░█ ▒██  ▀█▄   ▒██ ██░
+▒██   ██░▓██▒  ▐▌██▒▒▓█  ▄ ░█░ █ ░█ ░██▄▄▄▄██  ░ ▐██▓░
+░ ████▓▒░▒██░   ▓██░░▒████▒░░██▒██▓  ▓█   ▓██▒ ░ ██▒▓░
+░ ▒░▒░▒░ ░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▓░▒ ▒   ▒▒   ▓▒█░  ██▒▒▒ 
+  ░ ▒ ▒░ ░ ░░   ░ ▒░ ░ ░  ░  ▒ ░ ░    ▒   ▒▒ ░▓██ ░▒░ 
+░ ░ ░ ▒     ░   ░ ░    ░     ░   ░    ░   ▒   ▒ ▒ ░░  
+    ░ ░           ░    ░  ░    ░          ░  ░░ ░     
+                                              ░ ░     
+    """ + colorama.Style.RESET_ALL
+
+    print(ascii_art)
+    print("1. Começar o Checker")
+    print("2. Checkar 1 Gamertag")
+    print(colorama.Style.RESET_ALL)
+    choice = input("Escolha a opção do submenu: ")
+
+    if choice == "1":
+        gamertag_checker_menu()
+    elif choice == "2":
+        checkar_usuario()
+    else:
+        print("Opção inválida. Tente novamente.")
+
 
 def gamertag_checker_menu():
     global webhook_url, delay
@@ -212,6 +251,34 @@ def gamertag_checker_menu():
 
         time.sleep(delay)
 
+def checkar_usuario():
+    os.system('cls')
+    ascii_art = colorama.Fore.MAGENTA + """
+ ▒█████   ███▄    █ ▓█████  █     █░ ▄▄▄     ▓██   ██▓
+▒██▒  ██▒ ██ ▀█   █ ▓█   ▀ ▓█░ █ ░█░▒████▄    ▒██  ██▒
+▒██░  ██▒▓██  ▀█ ██▒▒███   ▒█░ █ ░█ ▒██  ▀█▄   ▒██ ██░
+▒██   ██░▓██▒  ▐▌██▒▒▓█  ▄ ░█░ █ ░█ ░██▄▄▄▄██  ░ ▐██▓░
+░ ████▓▒░▒██░   ▓██░░▒████▒░░██▒██▓  ▓█   ▓██▒ ░ ██▒▓░
+░ ▒░▒░▒░ ░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▓░▒ ▒   ▒▒   ▓▒█░  ██▒▒▒ 
+  ░ ▒ ▒░ ░ ░░   ░ ▒░ ░ ░  ░  ▒ ░ ░    ▒   ▒▒ ░▓██ ░▒░ 
+░ ░ ░ ▒     ░   ░ ░    ░     ░   ░    ░   ▒   ▒ ▒ ░░  
+    ░ ░           ░    ░  ░    ░          ░  ░░ ░     
+                                              ░ ░     
+    """ + colorama.Style.RESET_ALL
+
+    print(ascii_art)
+    username = input("Digite o nome de usuário que deseja verificar: ")
+    hit = check(username)
+    if hit == username:
+        print(colorama.Fore.GREEN + f"Nick Verificado está liberado! - {username}" + colorama.Style.RESET_ALL)
+        resposta = input("Clique em 'sim' para prosseguir para o link de trocar gamertag da Xbox (sim/não): ").lower()
+        if resposta == "sim":
+            webbrowser.open("https://social.xbox.com/changegamertag")
+    else:
+        print(colorama.Fore.RED + f"Nome de usuário inválido: {username}" + colorama.Style.RESET_ALL)
+        time.sleep(5)
+        checkar_usuario()
+
 
 def tempemail_menu():
     num_emails = int(input("Digite o número de endereços de e-mail a serem gerados: "))
@@ -220,7 +287,7 @@ def tempemail_menu():
 
 
 def configuracoes_menu():
-    global avatar_url, webhook_name, delay, webhook_url  
+    global avatar_url, webhook_name, delay, webhook_url, username_length  
     os.system('cls')
     ascii_art = colorama.Fore.MAGENTA + """
  ▒█████   ███▄    █ ▓█████  █     █░ ▄▄▄     ▓██   ██▓
@@ -241,6 +308,7 @@ def configuracoes_menu():
     print("[2] Avatar URL (Avatar URL atual: {})".format(avatar_url))
     print("[3] Nome da Webhook (Nome da Webhook atual: {})".format(webhook_name))
     print("[4] Delay (Delay atual: {})".format(delay))
+    print("[5] Número de caracteres (Número atual: {})".format(username_length))
 
     choice = input("Escolha a opção que deseja alterar (ou pressione Enter para sair): ")
 
@@ -257,6 +325,10 @@ def configuracoes_menu():
         new_delay = input("Informe o novo delay em segundos (ou pressione Enter para manter o atual): ")
         new_delay = int(new_delay) if new_delay and new_delay.isdigit() else None
         delay = new_delay if new_delay is not None else delay
+    elif choice == "5":
+        new_username_length = input("Informe o novo comprimento da gamertag (ou pressione Enter para manter o atual): ")
+        new_username_length = int(new_username_length) if new_username_length and new_username_length.isdigit() else None
+        username_length = new_username_length if new_username_length is not None else username_length
     else:
         print("Opção inválida ou nenhum valor fornecido. As configurações permanecerão as mesmas.")
 
@@ -273,7 +345,7 @@ def run():
             choice = input("Escolha a opção desejada: ")
 
             if choice == "1":
-                gamertag_checker_menu()
+                gamertag_checker2_menu()
             elif choice == "2":
                 tempemail_menu()
             elif choice == "3":
