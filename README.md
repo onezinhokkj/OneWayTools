@@ -15,5 +15,7 @@
 
 ❓ Sistema de checker usando proxy
 
+❓ Sistema de checker bedrock e java
+
 ❓ Mais em breve...
 
