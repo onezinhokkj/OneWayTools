@@ -1,6 +1,6 @@
 # OneWayTools
 
-✅ Sistema de Hwid usando Keyauth.cc
+✅ Sistema de Hwid usando Keyauth.win
 
 ✅ Checker de gamertags 4 caracteres
 
