@@ -10,3 +10,7 @@
 
 # Para Fazer:
 
+
+❓ Poder selecionar quantos caracteres na configurações
+❓ Sistema de checker usando proxy
+❓ Mais em breve...
