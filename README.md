@@ -1,21 +1,22 @@
-# OneWayTools
+OneWayTools
+O OneWayTools é um conjunto versátil de ferramentas que oferece uma variedade de recursos para entusiastas de jogos e desenvolvedores.
 
-✅ Sistema de Hwid usando Keyauth.win
+Recursos
+✅ Sistema de HWID usando Keyauth.win: Proteja sua aplicação com um sistema robusto de identificação de hardware.
 
-✅ Checker de gamertags 4 caracteres
+✅ Verificador de Gamertags de 4 caracteres: Verifique a disponibilidade de gamertags de 4 caracteres facilmente.
 
-✅ Sistema de TempMail
+✅ Sistema TempMail: Um sistema integrado para gerar endereços de e-mail temporários.
 
-✅ Checker Full configurável pelas configurações
+✅ Verificador Configurável: Personalize e configure o verificador de acordo com seus requisitos específicos.
 
-# Para Fazer:
+Para Fazer
+✅ Permitir a seleção do número de caracteres nas configurações.
 
+❓ Sistema de verificação usando proxy.
 
-✅ Poder selecionar quantos caracteres na configurações
+❓ Suporte para as edições Bedrock e Java.
 
-❓ Sistema de checker usando proxy
+❓ Mais atualizações e recursos em breve.
 
-❓ Sistema de checker bedrock e java
-
-❓ Mais em breve...
-
+Sinta-se à vontade para contribuir e sugerir melhorias para tornar o OneWayTools ainda melhor!
